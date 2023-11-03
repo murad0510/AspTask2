@@ -26,14 +26,14 @@ namespace AspTask2.Controllers
                        Discount=1
                 },
                 new Product {
-                    Id = 2,
+                    Id = 3,
                      Name="oreo",
                       Desciption="~/Images/coffee.jpg",
                        Price=4.50,
                        Discount=1
                 },
                 new Product {
-                    Id = 2,
+                    Id = 4,
                      Name="oreo",
                       Desciption="~/Images/coffee.jpg",
                        Price=4.50,

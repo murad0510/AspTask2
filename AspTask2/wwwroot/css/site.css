@@ -69,3 +69,86 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+
+
+
+
+
+
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.section {
+    background-color: red;
+    width: 100%;
+}
+
+    .section .div {
+        background-color: rebeccapurple;
+        width: 20%;
+        margin-left: 5%;
+        margin-top: 3%;
+        display: inline-block;
+    }
+
+    .section .d {
+        background-color: white;
+        width: 100%;
+        border: 1px solid black;
+    }
+
+        .section .d img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .section .d section {
+            width: 100%;
+            height: 20vh;
+            margin: auto;
+        }
+
+        .section .d div {
+            display: flex;
+            flex-direction: row;
+            /* background-color: aquamarine; */
+            font-size: 20px;
+        }
+
+.h1 {
+    margin-left: 5%;
+}
+
+.productEdit {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+    .productEdit button {
+        /* background-color: beige; */
+        width: 30%;
+        font-size: 30px;
+        border-radius: 10px;
+        transition-property: color, background-color;
+        transition-duration: 1s;
+    }
+
+    .productEdit #delete:hover {
+        background-color: red;
+        color: white;
+        transition-property: color, background-color;
+        transition-duration: 1s;
+        cursor: pointer;
+    }
+
+    .productEdit #update:hover {
+        background-color: rgb(224, 224, 185);
+        color: white;
+        transition-property: color, background-color;
+        transition-duration: 1s;
+        cursor: pointer;
+    }
