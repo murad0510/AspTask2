@@ -1,0 +1,47 @@
+﻿@model ProductViewModel
+
+<html>
+<head>
+    <link rel="stylesheet" href="~/css/site.css">
+</head>
+<body>
+    <div>
+        <section>
+            <section class="section">
+                @foreach (var item in Model.Products)
+                {
+                    <div class="div">
+                        <div class="d">
+                            <section>
+                                <img src="@item.Desciption" alt="">
+                            </section>
+                            <pre>   
+                            <div>
+                            <h1 class="h1">Name : </h1>
+                            <h1>@item.Name</h1>
+                                </div>
+                            <div>
+                            <h1 class="h1">Price : </h1>
+                            <h1>@item.Price AZN</h1>
+                                </div>
+                            <div>
+                            <h1 class="h1">Discount : </h1>
+                            <h1>@item.Discount AZN</h1>
+                                </div>
+                            </pre>
+
+                            <div class="productEdit">
+                                <a asp-action="Delete" asp-controller="Product" asp-route-productId="@item.Id">
+                                    <button id="delete">Delete</button>
+                                </a>
+                                <button id="update">Update</button>
+
+                            </div>
+                        </div>
+                    </div>
+                }
+            </section>
+        </section>
+    </div>
+</body>
+</html>
