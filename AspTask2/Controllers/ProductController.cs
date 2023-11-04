@@ -1,10 +1,14 @@
 ﻿using AspTask2.Entities;
 using AspTask2.Models;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.IO;
 using System.Reflection.Metadata;
+using System.Threading.Tasks;
 
 namespace AspTask2.Controllers
 {
@@ -15,40 +19,45 @@ namespace AspTask2.Controllers
                 new Product {
                     Id = 1,
                      Name="Oreo",
-                      Desciption="https://www.foodandwine.com/thmb/CNeNoP5IFc6gMfvkZyplDv_zjv0=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Oreo-Frozen-Treats-FT-BLOG0122-3d76bc020fa64a15a7b974a164976175.jpg",
+                      Desciption="OreoBigPacket.jpg",
                        Price=4.50,
                        Discount=1
                 },
                 new Product {
                     Id = 2,
                      Name="Magnum",
-                      Desciption="https://images.squarespace-cdn.com/content/v1/568bea5540667a54498bf784/1570632444443-9DMYAO4Y4VUW6RSNZ9YD/Lux-Magnum-Food-Photography-Chocolate-Ice-Cream-1.jpg?format=1500w",
+                      Desciption="Magnum.jpg",
                        Price=3.50,
                        Discount=1
                 },
                 new Product {
                     Id = 3,
                      Name="Lays",
-                      Desciption="https://www.lays.com/sites/lays.com/files/2020-11/lays-Classic-small.jpg",
+                      Desciption="Lays.jpg",
                        Price=2.00,
-                       Discount=1
+                       Discount=0.6
                 },
                 new Product {
                     Id = 4,
                      Name="m&m's",
-                      Desciption="https://cdn.media.amplience.net/i/marsmmsprod/ct2143_img_01_1000842915_4010241073_4010241074?%24i%24=&w=992",
+                      Desciption="M&M's.png",
                        Price=4.50,
-                       Discount=1
+                       Discount=0.5
                 },
                 new Product {
                     Id = 5,
-                     Name="oreo",
-                      Desciption="https://phorcys-static.ewg.org/kwikee/044/000/032/029.jpg",
-                       Price=4.50,
-                       Discount=1
+                     Name="Pizza",
+                      Desciption="Pizza.jpg",
+                       Price=3.30,
+                       Discount=0.4
                 },
             };
 
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public ProductController(IWebHostEnvironment env)
+        {
+            _webHostEnvironment = env;
+        }
         public IActionResult Index()
         {
             //id = 0;
@@ -57,17 +66,120 @@ namespace AspTask2.Controllers
             return View(viewModel);
         }
 
-        public IActionResult Delete(int productId)
+        public Product getProductById(int id)
         {
             for (int i = 0; i < products.Count; ++i)
             {
-                if (products[i].Id == productId)
+                if (products[i].Id == id)
                 {
-                    products.Remove(products[i]);
-                    return RedirectToAction("Index");
+                    return products[i];
                 }
             }
+            return null;
+        }
+
+        public IActionResult Delete(int productId)
+        {
+            var data = getProductById(productId);
+            if (data != null)
+            {
+                products.Remove(data);
+                return RedirectToAction("Index");
+            }
             return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult Update(int productId)
+        {
+            var data = getProductById(productId);
+            UpdateProductViewModel viewModel = new UpdateProductViewModel();
+            viewModel.Product = data;
+            return View("UpdateProduct", viewModel);
+        }
+
+        //[HttpPut]
+        public async Task<IActionResult> Update(UpdateProductViewModel productViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var product = productViewModel.Product;
+                if (product != null)
+                {
+                    string folder = string.Empty;
+                    if (product.CoverPhoto != null)
+                    {
+                        folder = (Guid.NewGuid() + product.CoverPhoto.FileName).ToString();
+                        string serverFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images/" + folder);
+
+                        await product.CoverPhoto.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
+                    }
+
+                    for (int i = 0; i < products.Count; i++)
+                    {
+                        if (products[i].Id == product.Id)
+                        {
+                            if (folder != string.Empty)
+                            {
+                                product.Desciption = folder;
+                            }
+                            else
+                            {
+                                product.Desciption = products[i].Desciption;
+                            }
+
+                            products[i] = product;
+                            break;
+                        }
+                    }
+                }
+                return RedirectToAction("Index");
+            }
+            return View(productViewModel);
+        }
+
+        [HttpGet]
+        public IActionResult AddProduct()
+        {
+            var product = new UpdateProductViewModel()
+            {
+                Product = new Product()
+            };
+            return View(product);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> AddProduct(UpdateProductViewModel productViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var product = productViewModel.Product;
+                string folder = string.Empty;
+                if (product.CoverPhoto != null)
+                {
+                    folder = (Guid.NewGuid() + product.CoverPhoto.FileName).ToString();
+                    string serverFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images/" + folder);
+
+                    await product.CoverPhoto.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
+                }
+
+                if (folder != string.Empty)
+                {
+                    product.Desciption = folder;
+                }
+                if (products.Count > 0)
+                {
+                    product.Id = products[products.Count - 1].Id + 1;
+                }
+                else
+                {
+                    product.Id = 1;
+                }
+                products.Add(product);
+                return RedirectToAction("Index");
+            }
+            return View(productViewModel);
         }
     }
 }

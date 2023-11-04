@@ -1,0 +1,45 @@
+﻿@model UpdateProductViewModel
+
+<html>
+
+<head>
+    <link rel="stylesheet" href="~/css/site.css">
+</head>
+<body>
+    <form asp-action="Update" enctype="multipart/form-data" asp-controller="Product" >
+        <section class="formInSection" style="display: none;">
+            <label asp-for="Product.Id"></label><br>
+            <input asp-for="Product.Id"><br>
+        </section>
+
+        <section class="formInSection">
+            <label asp-for="Product.Name"></label><br>
+            <input asp-for="Product.Name"><br>
+        </section>
+
+        <section class="formInSection">
+            <label asp-for="Product.Price"></label><br>
+            <input asp-for="Product.Price"><br>
+        </section>
+
+        <section class="formInSection">
+            <label asp-for="Product.Discount"></label><br>
+            <input asp-for="Product.Discount"><br>
+        </section>
+
+        <section class="formInSection">
+            <label asp-for="Product.CoverPhoto"></label><br>
+            @* <img src="images/coffee.jpg" /> *@
+
+                <input asp-for="Product.CoverPhoto" />
+
+            @* <button asp-action="OpenFile" asp-controller="Product">Open File</button> *@
+        </section>
+
+        <section class="formInSection">
+            <button id="update" type="submit">Update</button>
+        </section>
+    </form>
+</body>
+
+</html>

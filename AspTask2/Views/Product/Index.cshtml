@@ -6,6 +6,9 @@
 </head>
 <body>
     <div>
+        <a asp-controller="Product" asp-action="AddProduct">
+            <button id="addProduct">Add Product</button>
+        </a>
         <section>
             <section class="section">
                 @foreach (var item in Model.Products)
@@ -13,29 +16,31 @@
                     <div class="div">
                         <div class="d">
                             <section>
-                                <img src="@item.Desciption" alt="">
+                                <img src="@Url.Content($"~/images/{@item.Desciption}")" alt="image">
                             </section>
                             <pre>   
                             <div>
                             <h1 class="h1">Name : </h1>
                             <h1>@item.Name</h1>
-                                </div>
+                                            </div>
                             <div>
                             <h1 class="h1">Price : </h1>
                             <h1>@item.Price AZN</h1>
-                                </div>
+                                            </div>
                             <div>
                             <h1 class="h1">Discount : </h1>
                             <h1>@item.Discount AZN</h1>
-                                </div>
-                            </pre>
+                                            </div>
+                                        </pre>
 
                             <div class="productEdit">
                                 <a asp-action="Delete" asp-controller="Product" asp-route-productId="@item.Id">
                                     <button id="delete">Delete</button>
                                 </a>
-                                <button id="update">Update</button>
 
+                                <a asp-action="Update" asp-controller="Product" asp-route-productId="@item.Id">
+                                    <button id="update">Update</button>
+                                </a>
                             </div>
                         </div>
                     </div>
